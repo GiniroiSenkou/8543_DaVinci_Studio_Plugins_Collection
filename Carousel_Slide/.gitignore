@@ -1,0 +1,10 @@
+# generated / test material - never commit
+build/
+_test/
+__pycache__/
+*.mov
+*.mp4
+*.jpg
+*.drx
+Thumbs.db
+desktop.ini

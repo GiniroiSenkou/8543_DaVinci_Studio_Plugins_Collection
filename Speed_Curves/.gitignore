@@ -1,0 +1,9 @@
+# personal test material and generated files - never commit
+_test/
+old/
+build/
+__pycache__/
+*.mov
+*.mp4
+*.jpg
+*.csv

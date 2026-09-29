@@ -1,0 +1,9 @@
+Grid - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-28.
+Divides a clip into Columns x Rows cells and shows only the cells you choose:
+all, one cell, picked cells (81 tick boxes, up to 9x9) or cells 1..N (keyframe N
+to reveal box by box). The video stays as framed in the timeline; hidden cells and
+gaps are transparent (track below shows) or filled with a colour, e.g. black. Guide mode draws borders and dims
+hidden cells for setup. Single Cell mode fits the whole video into one cell.
+One CustomTool does the per-pixel work. Resolve limits it respects (probed in 21.1):
+NumberIn clamped to +-1,000,000, pow() returns 0 (use ^), output = input size.
+Look at: README.md, src/Giniroisenkou_Grid_gen.py (controls, expressions, presets).

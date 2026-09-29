@@ -1,0 +1,11 @@
+MangaPanels - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-27.
+Coloured manga-panel look for anime character-intro cards, from your own footage or
+stills: ink + paper two tones, one-colour duotone (pink, magenta, crimson, teal, gold,
+custom), halftone dot screen, paper grain, misregistration; a huge word behind the
+subject, distressed vertical Japanese text, top caption + bottom-left name. In/out:
+hard cut, colour flash, halftone grow, word slide; slow push-in.
+Presets: PinkPortrait, RedVictor, Teal, Gold (same controls, different defaults).
+Subject in front of the word: Magic Mask two-track setup (Studio) or, without Studio,
+clip alpha / luma key / green screen / oval holdout.
+Builds its own 9:16 canvas (reads the clip size with self.Input.OriginalWidth).
+Look at: README.md, src/Giniroisenkou_MangaPanels_gen.py (whole node graph in one file).

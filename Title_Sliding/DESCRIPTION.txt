@@ -1,0 +1,14 @@
+Title_Sliding - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-27.
+A title that slides side to side over a (semi-transparent) black band with a thin
+separator line between title and subtitle - the anime opening-credit look - plus
+news lower thirds built from the same parts (tag box, accent bar, scrolling ticker).
+Effects: Title_Sliding (anime strip), Title_Sliding_News, Title_Sliding_Breaking,
+Title_Sliding_Cinema - one macro, four sets of defaults.
+Customisable: texts, fonts, sizes, colours, band colour + opacity, line colour /
+position / thickness, accent bar, direction, exit, easing, timings, text drift.
+Animates in at clip start and out at clip end (comp.RenderStart/End).
+Pattern: TSCtrl (BrightnessContrast pass-through) holds controls + hidden maths;
+CustomTool rectangles + Text+ clipped to the band; colour pickers on unconnected
+Background tools. Output = input size.
+Look at: README.md, src/Giniroisenkou_Title_Sliding_gen.py (PRESETS table on top).
+Improve next: per-letter stagger, glitch-in option, second title line, logo slot.

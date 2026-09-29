@@ -1,0 +1,8 @@
+# build tools, generated files and test material - never commit
+_tools/
+build/
+_test/
+__pycache__/
+*.pyc
+*.mov
+*.mp4

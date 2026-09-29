@@ -1,0 +1,21 @@
+# personal test material and generated files - never commit
+_test/
+old/
+build/
+__pycache__/
+*.mov
+*.mp4
+*.jpg
+Thumbs.db
+desktop.ini
+
+# added for safe publishing
+_scratch/
+_tools/
+.env
+*.log
+*.db
+*.sqlite
+.vscode/
+.idea/
+.DS_Store

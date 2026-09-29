@@ -1,0 +1,12 @@
+Trends - DaVinci Resolve Edit effects (Fusion macros). Version 2026-09-27.
+28 single-purpose effects for trending IG / TikTok looks, each with a thumbnail
+and a tooltip on every control. Motion: Echo Trails, Stutter, Shake Punch, Zoom
+Blur, Ken Burns, Blur Reveal, Flicker. Glitch: RGB Split, Glitch Slices, Neon
+Edges. Retro: VHS, Film Grain, Pixelate, Light Leak. Look: Filter 2016, Dreamy
+Glow, Teal & Orange, Duotone, Comic, Halftone, Vignette, Cinema Bars. Mirror:
+Mirror Tiles, Kaleidoscope, Symmetry. Distort: Wave, Fisheye. Text: Number
+Counter.
+Pattern: one pass-through Ctrl node holds all controls (ids start with k) and
+hidden maths; work done by standard tools or one CustomTool (trig in degrees,
+no exp/pow, sample coords kept 1.5 px inside the frame). Output = input size.
+Look at: README.md, src/Giniroisenkou_Trends_gen.py (all effects in one file).

@@ -1,0 +1,9 @@
+Speed_Curves - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-26.
+Ready-made retime curves instead of hand-drawn Retime Curve keyframes: drop
+it on a clip (not an adjustment clip), pick a preset, move the Hit Point.
+13 presets: Normal, Boomerang, Slow-Mo Hit, Speed Burst, Velocity Pulses,
+Freeze Hit, Slow Down / Speed Up Into End, Accelerate, Decelerate, Smooth
+In-Out, Reverse, Rewind. Each is also a one-click effect with an icon
+(line = source frame over the clip, colour strip = speed). A TimeStretcher's
+Source Time is a Lua expression evaluating the curve, so there are no keyframes.
+Look at: README.md, src/Giniroisenkou_Speed_Curves_gen.py (PRESETS, CURVE_LUA).

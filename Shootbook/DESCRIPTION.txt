@@ -1,0 +1,11 @@
+Shootbook - stick-figure storyboard frames for DaVinci Resolve. Version 2026-09-27.
+140 shot-type frames in 9:16 (1080x1920 PNG) to plan vertical videos and block out
+a timeline before shooting: shot sizes, angles, composition, people in frame, camera
+moves, dance, hiking, events, swing dancing with a live band, transitions.
+Black = subject (solid, no faces), blue = background, orange = movement.
+Each frame carries its code and name (e.g. SW-07 Swing-out). Import into the Media
+Pool, sort by name, Shift+F12 to append. Shot list in the CSV; browse and build a
+list in Giniroisenkou_Shootbook.html.
+Frames are generated from code: edit the shot functions in
+src/Giniroisenkou_Shootbook_render_page.html, then run src/Giniroisenkou_Shootbook_render.js.
+Look at: README.md, src/Giniroisenkou_Shootbook_render_page.html (poses, helpers, shot list).

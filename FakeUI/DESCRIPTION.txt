@@ -1,0 +1,10 @@
+FakeUI - DaVinci Resolve Edit effects (Fusion macros). Version 2026-09-26.
+Editable mock-up pages for vertical video: a social profile page, an Italian daily front
+page (quotidiano style: teasers, masthead, red kicker, headline, summary, big photo, three
+columns) and a fashion-magazine cover (Didone masthead, cover lines, cover name, barcode).
+Layout and graphics stay fixed; every text and picture is changed from the Inspector.
+Page effect on the top track; one clip per picture on the tracks below with the _Photo
+effect (slot, source aspect, zoom, reframe, saturation).
+Look at: README.md, src/Giniroisenkou_FakeUI_layouts.py (all positions, texts, slots,
+colours), src/Giniroisenkou_FakeUI_gen.py (macros, Text+ calibration),
+src/Giniroisenkou_FakeUI_art.py (page art, previews, thumbnails).

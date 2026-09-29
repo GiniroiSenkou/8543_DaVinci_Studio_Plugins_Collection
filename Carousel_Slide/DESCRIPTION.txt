@@ -1,0 +1,15 @@
+Carousel_Slide - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-28.
+Collage slideshow / carousel strip (the Crsel app look): videos, photos and cut-out
+stickers scroll together through a rounded panel. One Carousel_Slide per clip, each
+clip on its own track, all starting on the same frame; each clip gets a box on a
+shared strip (Slot = equal tiles, or Custom X/Y/W/H for collages).
+Modes: Tile / Pop-out (cut-out person steps over the tile edge) / Sticker (PNG taped
+over a join). Continuous scroll or step (hold + slide), 4 directions, loop.
+Frame Preset: 9:16 Reels, 4:5 / 1:1 Instagram, 3:4, 4:3, 16:9 HD / 4K, 9:16 4K, Custom.
+Handles 4K sources (own canvas) and mixed frame rates (Clip FPS).
+Inspector: 6 collapsible sections with explanations + a tooltip on every control.
+Pattern: CJCtrl (BrightnessContrast pass-through) holds controls + hidden maths;
+BetterResize/Crop canvas -> Transform -> Merge masked by box x panel RectangleMasks.
+Look at: README.md, src/Giniroisenkou_Carousel_Slide_gen.py (FRAME_PRESETS, HELP, SECTIONS).
+Improve next: panel-shape presets (4:3 / 1:1 panel sizing), one-click Sticker variant,
+helper script that sets up all clips of a carousel at once.

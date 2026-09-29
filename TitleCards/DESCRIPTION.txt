@@ -1,0 +1,20 @@
+TitleCards - DaVinci Resolve Edit effects (Fusion macros). Version 2026-09-27 (fix).
+28 drop-on-a-clip title-card generators styled after anime episode cards and
+kinetic-type loading-screen title reveals: a word, a number/tag (prefix +
+tag - the tag can be any word, not just a number), sometimes a subtitle/quote
+line, animated on and back off. No copyrighted names, logos or artwork -
+generic placeholder text only, original Fusion node graphs.
+Episode Card family: Stack Cut, Ghost Settle, Spine, Overflow Number,
+Whisper, Edge Crop, Number Block, Ember Title, Smoke Stack, Warm Stack, Heat
+Fade, Lavender Lockup, Spaced Stack, Logo Plate.
+Kinetic family: Letter Focus, Letter Cycle, RGB Split, Slice Reveal, Echo
+Columns, Circle Stamp, Frame Fill, Box Lockup, Diagonal Band, Name Echo,
+Outline Giant, Ribbon Loop, Ink Burst, Red Slash.
+Pattern: one pass-through Ctrl node holds all controls (ids start with k)
+and hidden maths; content built from TextPlus/Transform/Blur/ColorGain
+only. Crop's pixel (not fractional) units were discovered and
+worked around; every animated field was verified live via fusion.LoadComp.
+Each type has an Effects-panel thumbnail. Out Point follows the clip end by
+default; Text+ fades premultiply colour by alpha (else the title glows on);
+layouts are written top-down and flipped once (Fusion Y is bottom-up).
+Look at: README.md, src/Giniroisenkou_TitleCards_gen.py (all types in one file).

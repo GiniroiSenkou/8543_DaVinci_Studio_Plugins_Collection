@@ -1,0 +1,449 @@
+<title>Stickman Shot Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#E9EDEB;--frame:#FFFFFF;--ink:#17191B;--blue:#3D8CC6;--move:#E2761A;
+  --muted:#5B6560;--line:#C9D1CD;--guide:#A9B4AF;--chip:#DCE2DF;--sel:#FFF3E6;
+  --ui:"IBM Plex Sans Condensed",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Kalam","Comic Neue","Segoe Print","Bradley Hand",cursive;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--paper:#131618;--frame:#1D2225;--ink:#ECEFEA;--blue:#6DB5E8;--move:#F39A48;
+  --muted:#9AA59F;--line:#2F383B;--guide:#4C575A;--chip:#232A2D;--sel:#2E2519;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--paper:#131618;--frame:#1D2225;--ink:#ECEFEA;--blue:#6DB5E8;--move:#F39A48;
+  --muted:#9AA59F;--line:#2F383B;--guide:#4C575A;--chip:#232A2D;--sel:#2E2519;}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:15px;line-height:1.5;padding-inline:16px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px}
+header{display:grid;gap:14px;grid-template-columns:1fr;align-items:end;padding-bottom:18px}
+@media (min-width:820px){header{grid-template-columns:1.3fr 1fr}}
+h1{font-family:var(--hand);font-weight:700;font-size:clamp(34px,6vw,56px);line-height:1;margin:0;letter-spacing:-.5px;text-wrap:balance}
+.lede{margin:10px 0 0;max-width:60ch;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:22px;height:0;border-top:2.5px solid}
+.sw.k{border-color:var(--ink)}.sw.b{border-color:var(--blue)}.sw.m{border-color:var(--move)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-block:1px solid var(--line);padding-block:10px;display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.lbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px}
+.chip{font:500 13px/1 var(--ui);color:var(--ink);background:var(--chip);border:1px solid transparent;border-radius:999px;padding:7px 11px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.chip:focus-visible,.add:focus-visible,.act:focus-visible{outline:2px solid var(--move);outline-offset:2px}
+.list{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:13px}
+.act{font:500 13px/1 var(--ui);background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 10px;cursor:pointer}
+.act.primary{background:var(--move);border-color:var(--move);color:#1a1004}
+.count{font-family:var(--mono);font-variant-numeric:tabular-nums}
+#out{width:100%;min-height:120px;font:12px/1.5 var(--mono);background:var(--frame);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px}
+section{padding-top:26px}
+.sh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1.5px solid var(--ink);padding-bottom:6px;margin-bottom:14px}
+.sh h2{font-family:var(--hand);font-weight:700;font-size:26px;margin:0;line-height:1.1}
+.sh .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sh p{margin:0;color:var(--muted);font-size:14px;flex-basis:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px 14px}
+@media (max-width:420px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}}
+.card{display:flex;flex-direction:column;gap:6px;border-radius:4px;padding:6px;margin:-6px}
+.card.on{background:var(--sel)}
+.fr{display:block;width:100%;height:auto;aspect-ratio:9/16;max-width:100%}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.code{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+.add{font:500 12px/1 var(--ui);background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 8px;cursor:pointer}
+.add[aria-pressed="true"]{background:var(--move);color:#1a1004;border-color:var(--move)}
+.card h3{font-family:var(--hand);font-weight:700;font-size:18px;line-height:1.15;margin:0}
+.card p{margin:0;font-size:13px;line-height:1.4;color:var(--muted)}
+.ctx{font-family:var(--mono);font-size:10.5px;color:var(--blue);text-transform:uppercase;letter-spacing:.06em}
+.empty{color:var(--muted);padding:30px 0}
+footer{margin-top:48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+.fr line,.fr path,.fr circle,.fr rect,.fr ellipse,.fr polyline{vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.k{stroke:var(--ink);fill:none;stroke-width:1.6}
+.b{stroke:var(--blue);fill:none;stroke-width:1.1}
+.m{stroke:var(--move);fill:none;stroke-width:1.7}
+.g{stroke:var(--guide);fill:none;stroke-width:.8;stroke-dasharray:3 3}
+.hd{fill:var(--frame)}
+.kf{fill:var(--ink);stroke:none}.bf{fill:var(--blue);stroke:none}.mf{fill:var(--move);stroke:none}
+.dash{stroke-dasharray:2.5 2.5}
+.fg{stroke-width:var(--sw,3px)}
+.thk{stroke-width:2.6}
+.bgr{fill:var(--frame)}.bdr{fill:none;stroke:var(--ink);stroke-width:2}
+@media (prefers-reduced-motion:no-preference){.card{transition:background .15s}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto-start-reverse"><path d="M1 1L8 5L1 9" fill="none" style="stroke:var(--move)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs></svg>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>Stickman Shot Book</h1>
+    <p class="lede">140 vertical 9:16 frames for planning Reels before you shoot. Pick the shots a video needs, add them to your list, and copy it into your notes or planner.</p>
+  </div>
+  <div class="legend" aria-label="Legend">
+    <span><i class="sw k"></i>Subject</span>
+    <span><i class="sw b"></i>Background and context</span>
+    <span><i class="sw m"></i>Camera or subject movement</span>
+  </div>
+</header>
+
+<div class="bar" role="toolbar" aria-label="Filters">
+  <div class="row" id="ctxRow"><span class="lbl">Context</span></div>
+  <div class="row" id="catRow"><span class="lbl">Category</span></div>
+  <div class="row">
+    <span class="lbl">My list</span>
+    <span class="count" id="count">0 shots</span>
+    <div class="list">
+      <button class="act" id="clear" type="button">Clear</button>
+      <button class="act primary" id="copy" type="button">Copy list</button>
+    </div>
+  </div>
+  <textarea id="out" readonly hidden aria-label="Shot list text"></textarea>
+</div>
+
+<main id="book"></main>
+<footer>Frames are 9:16. Codes stay the same when you filter, so you can write "DA-05, HK-02, EV-03" in your planner and find them again here.</footer>
+</div>
+
+<script>
+(function(){
+const W=90,H=160;
+const q=n=>Math.round(n*10)/10;
+const L=(x1,y1,x2,y2,c='b',x='')=>`<line class="${c}" x1="${q(x1)}" y1="${q(y1)}" x2="${q(x2)}" y2="${q(y2)}" ${x}/>`;
+const P=(d,c='b',x='')=>`<path class="${c}" d="${d}" ${x}/>`;
+const Ci=(x,y,r,c='b')=>`<circle class="${c}" cx="${q(x)}" cy="${q(y)}" r="${q(r)}"/>`;
+const El=(x,y,rx,ry,c='b')=>`<ellipse class="${c}" cx="${q(x)}" cy="${q(y)}" rx="${q(rx)}" ry="${q(ry)}"/>`;
+const R=(x,y,w,h,c='b',rx=0)=>`<rect class="${c}" x="${q(x)}" y="${q(y)}" width="${q(w)}" height="${q(h)}" rx="${rx}"/>`;
+const G=(t,s)=>`<g transform="${t}">${s}</g>`;
+
+const B={h:[0,-88],n:[0,-78],hp:[0,-45],le:[-8,-62],lh:[-10,-46],re:[8,-62],rh:[10,-46],lk:[-5,-23],lf:[-7,0],rk:[5,-23],rf:[7,0]};
+const PO={
+ stand:{},
+ up:{le:[-10,-90],lh:[-14,-106],re:[10,-90],rh:[14,-106]},
+ v:{le:[-12,-88],lh:[-22,-100],re:[12,-88],rh:[22,-100],lk:[-8,-23],lf:[-14,0],rk:[8,-23],rf:[14,0]},
+ out:{le:[-15,-76],lh:[-30,-77],re:[15,-76],rh:[30,-77]},
+ kick:{le:[-14,-80],lh:[-28,-88],re:[14,-72],rh:[26,-66],lk:[-3,-23],lf:[-5,0],rk:[18,-46],rf:[36,-54]},
+ passe:{le:[-11,-90],lh:[-2,-103],re:[11,-90],rh:[2,-103],lk:[0,-23],lf:[0,0],rk:[15,-32],rf:[2,-24]},
+ jump:{le:[-12,-88],lh:[-20,-102],re:[12,-88],rh:[20,-102],lk:[-11,-30],lf:[-5,-14],rk:[11,-30],rf:[5,-14]},
+ walk:{le:[-6,-61],lh:[-11,-48],re:[6,-61],rh:[11,-49],lk:[7,-23],lf:[11,0],rk:[-5,-22],rf:[-12,-2]},
+ sit:{h:[0,-70],n:[0,-60],hp:[0,-28],le:[6,-45],lh:[15,-36],re:[8,-45],rh:[17,-34],lk:[16,-28],lf:[16,-1],rk:[20,-27],rf:[22,-1]},
+ point:{re:[14,-74],rh:[30,-80]},
+ cheer:{re:[10,-88],rh:[13,-105]},
+ crouch:{h:[0,-64],n:[0,-54],hp:[0,-30],le:[-9,-42],lh:[-5,-30],re:[9,-42],rh:[5,-30],lk:[-13,-20],lf:[-9,0],rk:[13,-20],rf:[9,0]},
+ lean:{hp:[3,-45],le:[-10,-62],lh:[-3,-49],re:[10,-88],rh:[7,-104],lk:[-2,-23],lf:[-8,0],rk:[10,-22],rf:[15,-1]},
+ finale:{hp:[2,-45],le:[-11,-66],lh:[-20,-54],re:[12,-86],rh:[26,-100],lk:[-4,-23],lf:[-10,0],rk:[10,-23],rf:[16,0]},
+ hold:{re:[10,-62],rh:[6,-72]},
+ toast:{re:[11,-72],rh:[14,-88]},
+ hips:{le:[-11,-62],lh:[-5,-50],re:[11,-62],rh:[5,-50]},
+ horn:{le:[5,-68],lh:[12,-80],re:[7,-66],rh:[15,-82]},
+ saxp:{le:[5,-70],lh:[9,-62],re:[7,-58],rh:[14,-48]},
+ bassist:{le:[7,-74],lh:[16,-88],re:[8,-58],rh:[14,-44]},
+ sing:{re:[9,-70],rh:[13,-82],le:[-9,-64],lh:[-15,-52]},
+ drum:{le:[-11,-66],lh:[-22,-58],re:[11,-66],rh:[22,-60]},
+ reach:{hp:[-2,-45],le:[-8,-62],lh:[-12,-48],re:[14,-68],rh:[27,-66],lk:[-4,-23],lf:[-9,0],rk:[6,-22],rf:[10,0]},
+ dipL:{h:[-13,-80],n:[-9,-71],hp:[0,-45],le:[-15,-58],lh:[-19,-44],re:[-4,-58],rh:[-8,-44],lk:[-4,-23],lf:[-10,0],rk:[8,-22],rf:[14,0]},
+ charl:{le:[-12,-62],lh:[-22,-52],re:[12,-62],rh:[20,-74],lk:[-3,-23],lf:[-5,0],rk:[10,-30],rf:[22,-24]},
+ tip:{re:[13,-76],rh:[7,-98]},
+ clap:{le:[-10,-64],lh:[-1,-72],re:[10,-64],rh:[1,-72]},
+ mic:{re:[9,-66],rh:[3,-80],le:[-12,-72],lh:[-22,-84]},
+ low:{h:[0,-102],n:[0,-93],hp:[0,-60],le:[-9,-78],lh:[-13,-62],re:[9,-78],rh:[13,-62],lk:[-9,-30],lf:[-15,0],rk:[9,-30],rf:[15,0]},
+ worm:{h:[0,-106],n:[0,-97],hp:[0,-72],le:[-8,-88],lh:[-11,-76],re:[8,-88],rh:[11,-76],lk:[-16,-40],lf:[-30,0],rk:[16,-40],rf:[30,0]},
+ high:{h:[0,-68],n:[0,-59],hp:[0,-38],le:[-8,-52],lh:[-9,-40],re:[8,-52],rh:[9,-40],lk:[-3,-19],lf:[-4,0],rk:[3,-19],rf:[4,0]},
+ selfie:{re:[16,-58],rh:[34,-40]}
+};
+
+function fig(pose,x,y,s,o={}){
+  const p=Object.assign({},B,PO[pose]||{},o.p||{});
+  const base=o.c||'k', f=base+'f';
+  const c=base+' fg'+(o.dash?' dash':'');
+  let sw=s<.3?2:s<.7?2.8:Math.min(10,3.4*Math.sqrt(s));
+  if(base==='b')sw*=.8; if(o.sil)sw*=1.25;
+  const lnP=(...pts)=>`<polyline class="${c}" points="${pts.map(v=>v.join(',')).join(' ')}"/>`;
+  const ln=(a,b)=>`<line class="${c}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`;
+  const sh=[p.n[0],p.n[1]+3];
+  let g=lnP(p.hp,p.lk,p.lf)+lnP(p.hp,p.rk,p.rf)+ln(p.n,p.hp);
+  if(o.pack) g+=`<rect class="${c} ${o.sil?f:'hd'}" x="${p.n[0]-7}" y="${p.n[1]+3}" width="14" height="21" rx="3"/>`;
+  if(o.skirt){const w=o.skirt==='flare'?20:12,[sx,sy]=p.hp;g+=`<path class="${f}" d="M${sx-3} ${sy-6} L${sx-w} ${sy+15} Q${sx} ${sy+18} ${sx+w} ${sy+15} L${sx+3} ${sy-6} Z"/>`;}
+  if(o.bass) g+=`<path class="${f}" d="M16 -60 Q4 -60 5 -48 Q6 -40 9 -36 Q1 -28 2 -16 Q3 -4 16 -4 Q29 -4 30 -16 Q31 -28 23 -36 Q26 -40 27 -48 Q28 -60 16 -60 Z"/><line class="k thk" x1="16" y1="-60" x2="16" y2="-100"/><circle class="${f}" cx="16" cy="-102" r="2.6"/><line class="k thk" x1="16" y1="-4" x2="16" y2="0"/>`;
+  if(o.mic) g+=`<line class="k thk" x1="16" y1="0" x2="16" y2="-80"/><ellipse class="kf" cx="16" cy="0" rx="7" ry="1.6"/><rect class="kf" x="12" y="-94" width="8" height="14" rx="3.5"/>`;
+  g+=lnP(sh,p.le,p.lh)+lnP(sh,p.re,p.rh);
+  if(o.horn) g+=`<line class="k thk" x1="8" y1="-86" x2="31" y2="-84"/><path class="${f}" d="M30 -84 L40 -91 L40 -77 Z"/><line class="k" x1="18" y1="-85" x2="18" y2="-90"/><line class="k" x1="21" y1="-85" x2="21" y2="-90"/>`;
+  if(o.sax) g+=`<path class="k thk" d="M7 -84 L11 -78 Q8 -52 11 -40 Q15 -30 22 -38 L24 -48"/><path class="${f}" d="M20 -48 L28 -48 L27 -54 L21 -54 Z"/>`;
+  if(o.sticks) g+=`<line class="k" x1="${p.lh[0]}" y1="${p.lh[1]}" x2="${p.lh[0]+10}" y2="${p.lh[1]+8}"/><line class="k" x1="${p.rh[0]}" y1="${p.rh[1]}" x2="${p.rh[0]-10}" y2="${p.rh[1]+8}"/>`;
+  if(o.pole) g+=`<line class="k" x1="${p.rh[0]}" y1="${p.rh[1]}" x2="${p.rh[0]+9}" y2="0"/>`;
+  if(o.shoes) for(const ft of [p.lf,p.rf]) g+=`<ellipse class="${f}" cx="${ft[0]}" cy="${ft[1]-1.8}" rx="4.8" ry="2.5"/>`;
+  if(o.glass){const [gx,gy]=p.rh;g+=`<path class="k hd" d="M${gx-3} ${gy-9} Q${gx} ${gy} ${gx+3} ${gy-9} Z M${gx} ${gy-4.5} L${gx} ${gy+1} M${gx-2} ${gy+1} L${gx+2} ${gy+1}"/>`;}
+  if(o.bottle){const [gx,gy]=p.rh;g+=`<rect class="k hd" x="${gx-2}" y="${gy-10}" width="4" height="11" rx="1"/>`;}
+  g+=ln([p.h[0],p.h[1]+9],p.n);
+  const hx=p.h[0],hy=p.h[1];
+  g+=`<circle class="${f}" cx="${hx}" cy="${hy}" r="9.4"/>`;
+  if(o.pony) g+=`<path class="${c}" d="M${hx+5} ${hy-7} q9 1 8 13"/>`;
+  if(o.hat) g+=`<path class="${f}" d="M${hx-15} ${hy-5.5} L${hx+15} ${hy-5.5} L${hx+13} ${hy-3.5} L${hx-13} ${hy-3.5} Z M${hx-8} ${hy-5.5} L${hx-7} ${hy-15} Q${hx} ${hy-18} ${hx+7} ${hy-15} L${hx+8} ${hy-5.5} Z"/>`;
+  return `<g style="--sw:${q(sw)}px" transform="translate(${x} ${y}) scale(${o.flip?-s:s} ${s})">${g}</g>`;
+}
+function hand(x,y,s,rot=0,c='k',flip=false){
+  const fing=[[-4.5,-15],[-1.5,-17.5],[1.5,-17],[4.5,-13.5]].map(([fx,fy])=>`<path class="${c}f" d="M${fx-1.5} -5 L${fx-1.5} ${fy+1.5} A1.5 1.5 0 0 1 ${fx+1.5} ${fy+1.5} L${fx+1.5} -5"/>`).join('');
+  return G(`translate(${x} ${y}) rotate(${rot}) scale(${flip?-s:s} ${s})`,`<path class="${c}f" d="M-6 -6 Q-6.5 9 0 9 Q6.5 9 6 -6 Z"/>${fing}<path class="${c}f" d="M-6 1 L-11.5 -6 A1.5 1.5 0 0 1 -9 -8.2 L-4 -3"/>`);
+}
+function top(x,y,s,arms='out',c='k'){
+  const a=arms==='out'?[[-12,0,-26,-2],[12,0,26,-2]]:arms==='up'?[[-12,0,-16,-18],[12,0,16,-18]]:[[-12,0,-10,-14],[12,0,10,-14]];
+  return `<g style="--sw:${q(Math.max(2.4,3.2*s))}px" transform="translate(${x} ${y}) scale(${s})">`+a.map(v=>`<line class="${c} fg" x1="${v[0]}" y1="${v[1]}" x2="${v[2]}" y2="${v[3]}"/>`).join('')+`<ellipse class="${c}f" cx="0" cy="0" rx="12" ry="5"/><circle class="${c}f" cx="0" cy="0" r="6"/></g>`;
+}
+const gr=(y,c='b')=>L(0,y,W,y,c);
+const mtn=(y,h=1,c='b')=>P(`M-2 ${y} L14 ${q(y-22*h)} L26 ${q(y-12*h)} L44 ${q(y-40*h)} L60 ${q(y-18*h)} L72 ${q(y-28*h)} L92 ${q(y-8*h)}`,c);
+const sun=(x,y,r=7)=>Ci(x,y,r);
+const tree=(x,y,h=20,c='b')=>L(x,y,x,y-h*.3,c)+P(`M${q(x-h*.25)} ${q(y-h*.3)} L${x} ${q(y-h)} L${q(x+h*.25)} ${q(y-h*.3)} Z`,c+' hd');
+const trees=(y,h,xs)=>xs.map(x=>tree(x,y,h)).join('');
+const trail=(vy=70,vx=45)=>P(`M6 160 Q${vx-8} ${vy+40} ${vx-2} ${vy}`)+P(`M84 160 Q${vx+8} ${vy+40} ${vx+2} ${vy}`);
+const cloud=(x,y)=>P(`M${x} ${y} q2 -6 8 -4 q4 -6 10 -1 q6 -1 5 5 z`);
+const rock=(x,y,w,c='b hd')=>P(`M${x} ${y} q${q(w*.12)} -${q(w*.5)} ${q(w*.45)} -${q(w*.5)} q${q(w*.45)} 0 ${q(w*.55)} ${q(w*.5)} z`,c);
+const sign=(x,y)=>L(x,y,x,y-26)+R(x-12,y-38,24,12,'b hd',1)+L(x-8,y-33.5,x+8,y-33.5)+L(x-8,y-29.5,x+4,y-29.5);
+const waves=(y0,rows=3,gap=8,c='b')=>{let s='';for(let r=0;r<rows;r++){const y=y0+r*gap,off=(r%2)*7;for(let x=-7+off;x<92;x+=14)s+=P(`M${x} ${y} q3.5 -3 7 0`,c);}return s;};
+const houses=(y,c='b')=>{let s='',x=0;const hs=[34,46,30,52,40,28,44],ws=[12,14,11,15,13,12,14];hs.forEach((h,i)=>{const w=ws[i];s+=R(x,y-h,w,h+60,c+' hd');for(let wy=y-h+6;wy<y-4;wy+=9){s+=R(x+2.5,wy,2.4,4,c);s+=R(x+w-4.9,wy,2.4,4,c);}x+=w;});return s;};
+const bulbs=(y,c='b')=>{let s=P(`M0 ${y} Q22.5 ${y+10} 45 ${y} Q67.5 ${y+10} 90 ${y}`,c);for(let i=1;i<9;i++){const x=i*10,t=(x%45)/45;s+=Ci(x,y+20*t*(1-t)+2.4,1.6,c+' hd');}return s;};
+const spot=(x,y2,w=18)=>P(`M${x-2} 0 L${x-w} ${y2} M${x+2} 0 L${x+w} ${y2}`,'b dash');
+const stage=(y)=>L(0,y,W,y)+L(0,y+5,W,y+5);
+const fw=(x,y,r)=>{let s=Ci(x,y,1,'bf');for(let i=0;i<12;i++){const a=i*Math.PI/6;s+=L(x+Math.cos(a)*r*.35,y+Math.sin(a)*r*.35,x+Math.cos(a)*r,y+Math.sin(a)*r);}return s;};
+function crowd(y,r,n,seed=1,handsUp=0,c='b'){let s='';for(let i=0;i<n;i++){const j=Math.sin((i+1)*12.9898+seed*78.233)*43758.5453,f=j-Math.floor(j);const x=(i+.5)*W/n+(f-.5)*r;const yy=y+(f-.5)*r*1.2;
+  if(handsUp&&f>.35){const side=f>.7?-1:1;s+=L(x+side*r*1.3,yy+r*1.6,x+side*r*1.9,yy-r*2.6,c)+Ci(x+side*r*1.9,yy-r*2.9,r*.35,c+' hd');}
+  s+=P(`M${q(x-r*1.9)} ${q(yy+r*3)} Q${q(x)} ${q(yy+r*.7)} ${q(x+r*1.9)} ${q(yy+r*3)}`,c+' hd')+Ci(x,yy,r,c+' hd');}return s;}
+const ar=(x1,y1,x2,y2,x='')=>`<line class="m" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#ah)" ${x}/>`;
+const arc=(d,both)=>`<path class="m" d="${d}" marker-end="url(#ah)" ${both?'marker-start="url(#ah)"':''}/>`;
+const zin=()=>ar(6,8,22,24)+ar(84,8,68,24)+ar(6,152,22,136)+ar(84,152,68,136);
+const zout=()=>ar(24,34,8,14)+ar(66,34,82,14)+ar(24,126,8,146)+ar(66,126,82,146)+R(24,34,42,92,'g');
+const speed=(ys,x1=4,x2=86)=>ys.map(y=>L(x1,y,x2,y,'m dash')).join('');
+const shake=(x,y)=>P(`M${x} ${y} l3 -3 l3 3 l3 -3 l3 3`,'m');
+const flower=(x,y,r,c='k')=>{let s='';for(let i=0;i<6;i++){const a=i*Math.PI/3;s+=Ci(x+Math.cos(a)*r,y+Math.sin(a)*r,r*.75,c+' hd');}return s+Ci(x,y,r*.6,c+' hd');};
+const grass=(c='b thk')=>P('M4 160 Q8 130 2 104',c)+P('M10 160 Q12 128 20 110',c)+P('M16 160 Q18 140 12 124',c)+P('M86 160 Q82 128 88 100',c)+P('M78 160 Q76 136 68 118',c);
+const floorLines=(vy,vx=45)=>[-40,-10,20,60,100,130].map(x=>L(x,160,vx,vy)).join('');
+const cup=(x,y,s,c='k')=>G(`translate(${x} ${y}) scale(${s})`,P('M-8 -14 L-6 6 Q0 9 6 6 L8 -14 Z',c+' hd')+P('M8 -9 q6 0 5 6 q-1 4 -6 3',c)+P('M-3 -18 q-2 -3 0 -6 q2 -3 0 -6 M3 -18 q-2 -3 0 -6 q2 -3 0 -6','b'));
+const wglass=(x,y,s,rot,c='k')=>G(`translate(${x} ${y}) rotate(${rot}) scale(${s})`,P('M-6 -18 Q0 0 6 -18 Z M0 -8 L0 8 M-5 8 L5 8',c+' hd')+P('M-4.5 -13 L4.5 -13','b'));
+
+const drums=(x,y,s)=>G(`translate(${x} ${y}) scale(${s})`,L(-24,0,-24,-40,'k')+L(-32,-44,-16,-40,'k thk')+L(24,0,24,-46,'k')+L(16,-50,32,-46,'k thk')+El(-17,-26,8,3,'k hd thk')+L(-17,-23,-17,0,'k')+El(16,-30,7,3,'k hd thk')+Ci(0,-15,15,'k hd thk')+Ci(0,-15,4,'k'));
+const shoe=(x,y,s,fl=false)=>G(`translate(${x} ${y}) scale(${fl?-s:s} ${s})`,P('M-12 0 L-12 -8 Q-10 -12 -4 -12 L4 -10 Q14 -8 16 -3 L16 0 Z','kf')+P('M7 -9.4 Q14 -8 16 -3 L16 0 L7 0 Z','k hd')+P('M-12 -8 L-4 -8 L-4 0 L-12 0 Z','k hd'));
+const keys=(y)=>{let t='';for(let i=0;i<9;i++)t+=R(i*10,y,10,56,'k hd');[1,2,4,5,6,8].forEach(i=>t+=R(i*10-3,y,6,34,'kf'));return t;};
+const CATS=[
+ ['SZ','Shot size','How much of the subject is in frame, from tiny in the landscape to just the eyes.'],
+ ['AN','Camera angle','Where the lens sits relative to the subject: above, below, level or tilted.'],
+ ['CP','Composition','How the frame is arranged: thirds, symmetry, layers, space and light.'],
+ ['SB','People in frame','Who is in the shot and how they relate to each other and to the camera.'],
+ ['MV','Camera movement','Moves drawn as orange arrows. Most work on a phone or gimbal.'],
+ ['DA','Dance','Shots built around choreography, formations, footwork and the final pose.'],
+ ['HK','Hiking','Trail, summit, coast and gear shots for outdoor days near and far.'],
+ ['EV','Events','Venues, stages, crowds, toasts and the details that make a night feel real.'],
+ ['SW','Swing and live band','Lindy hop, Charleston and the band itself: horns, bass, drums and the singer at a vintage mic.'],
+ ['TR','Transitions','Shots you plan on purpose so the cut between two clips feels smooth.']
+];
+const A='dhes';
+const S=[
+// SHOT SIZE
+['SZ',A,'Extreme wide','Subject tiny, the place is the star. Strong opener.',()=>sun(68,36,8)+mtn(100,1.3)+gr(122)+trees(122,14,[10,19,80])+fig('stand',46,122,.13)],
+['SZ',A,'Wide','Whole body with plenty of setting around it.',()=>mtn(78,.8)+gr(128)+tree(12,128,40)+tree(80,128,30)+fig('stand',45,128,.5)],
+['SZ',A,'Full shot','Head to toe with a little air. Shows the whole move.',()=>gr(70)+gr(148)+fig('stand',45,148,1.15,{face:1})],
+['SZ',A,'Medium wide','Knees up. Body language plus some setting.',()=>gr(74)+fig('hips',45,204,1.9,{face:1})],
+['SZ',A,'Medium','Waist up. Talking, gestures, reactions.',()=>gr(92)+fig('stand',45,282,2.6,{face:1})],
+['SZ',A,'Medium close-up','Chest up. Emotion with a hint of outfit.',()=>fig('stand',45,404,3.94,{face:1})],
+['SZ',A,'Close-up','Face fills the frame. The feeling of the moment.',()=>fig('stand',45,456,4.5,{face:1})],
+['SZ',A,'Extreme close-up','Eyes and brow only. Focus, tension, intimacy.',()=>fig('stand',45,849,8)+L(0,130,90,130,'m dash')],
+['SZ',A,'Insert: hands','Hands holding, tying, grabbing. Small action, big clarity.',()=>cup(45,104,2.6)+hand(22,104,2.4,75)+hand(68,104,2.4,-75,'k',true)],
+['SZ',A,'Insert: feet','Shoes and ground. Steps, stance, arrival.',()=>gr(153)+fig('stand',45,151,4.4,{shoes:1})],
+['SZ',A,'Detail','A prop or texture that tells the story.',()=>gr(126)+cup(45,122,2.2)+P('M8 126 L8 160 M82 126 L82 160')],
+['SZ',A,'Establishing','Where are we? Town, venue or trailhead from afar.',()=>houses(96)+waves(128,4,8)]
+,
+// ANGLE
+['AN',A,'Eye level','Lens at eye height. Neutral and honest.',()=>gr(100)+fig('stand',45,150,1.1,{face:1})+L(0,53,90,53,'m dash')],
+['AN',A,'Low angle','Camera below, looking up. Subject feels big.',()=>cloud(8,22)+cloud(62,36)+L(4,160,22,0)+L(86,160,68,0)+fig('low',45,158,1.35,{face:1})],
+['AN',A,"Worm's eye",'Camera on the ground. Towering and dramatic.',()=>cloud(10,30)+cloud(58,18)+fig('worm',45,172,1.4,{face:1,shoes:1})+grass()],
+['AN',A,'High angle','Camera above, looking down. Subject feels small.',()=>L(0,30,26,160)+L(90,30,64,160)+gr(70)+El(45,121,14,3,'b')+fig('high',45,120,1.3,{face:1})],
+['AN','des','Top-down','Straight down. Shapes, patterns, floor work.',()=>[20,45,70].map(x=>L(x,0,x,160,'g')).join('')+[40,80,120].map(y=>L(0,y,90,y,'g')).join('')+top(45,80,1.3,'out')],
+['AN','des','Dutch angle','Tilted horizon. Energy, fun, unease.',()=>G('rotate(-14 45 80)',L(-30,100,120,100)+L(-30,150,120,150)+fig('lean',45,150,1.05,{face:1}))],
+['AN','es','Above the crowd','Phone held high over heads. Size of the crowd.',()=>stage(52)+spot(25,52,10)+spot(65,52,10)+fig('mic',45,52,.35)+crowd(76,4,7,1)+crowd(96,5,6,2)+crowd(120,6,5,3)+crowd(146,7,4,4)],
+['AN',A,'Ground level','Lens just above the floor. Ground leads the eye in.',()=>floorLines(110)+gr(110)+fig('stand',45,110,.55)],
+['AN','hes','Drone high','High and far. Route, shape of the land, scale.',()=>P('M-2 70 L30 44 L55 74 L92 48')+P('M-2 100 L25 84 L60 110 L92 90')+P('M20 160 Q46 132 34 112 Q22 94 48 82','b dash')+fig('walk',48,82,.1)],
+['AN',A,'Profile','Side-on. Clean shape of walks, jumps and kicks.',()=>gr(96)+gr(150)+fig('walk',45,150,1.1,{prof:1})]
+,
+// COMPOSITION
+['CP',A,'Rule of thirds','Subject on a third line, horizon on another.',()=>[30,60].map(x=>L(x,0,x,160,'g')).join('')+[53.3,106.7].map(y=>L(0,y,90,y,'g')).join('')+mtn(106.7,.7)+fig('stand',30,146,.7,{face:1})],
+['CP',A,'Symmetry','Dead center, both sides match. Bold and calm.',()=>R(4,14,11,146,'b hd')+R(75,14,11,146,'b hd')+trail(96)+fig('stand',45,120,.55)],
+['CP',A,'Frame in frame','Arch, doorway or branches around the subject.',()=>R(0,0,90,160,'b')+P('M18 160 L18 62 Q45 18 72 62 L72 160')+P('M10 160 L10 58 Q45 6 80 58 L80 160')+gr(128)+fig('walk',45,128,.45)],
+['CP',A,'Leading lines','Paths, rails and stairs pointing to the subject.',()=>trail(70,58)+[0,1,2,3].map(i=>L(10+i*12,150-i*20,10+i*12,138-i*20,'b')).join('')+fig('walk',58,80,.14)],
+['CP',A,'Negative space','Lots of empty sky or wall. Mood, room for text.',()=>gr(140)+fig('stand',72,140,.34)+P('M18 44 q4 -4 8 0 q4 -4 8 0')+P('M30 58 q3 -3 6 0 q3 -3 6 0')],
+['CP',A,'Silhouette','Subject dark against a bright sky or light.',()=>Ci(45,84,32)+gr(128)+fig('v',45,128,.8,{sil:1})],
+['CP','dh','Reflection','Puddle, lake, window or mirror doubles the subject.',()=>mtn(62,.6)+gr(96)+fig('stand',45,96,.5)+G('translate(0 192) scale(1 -1)',fig('stand',45,96,.5,{c:'b',dash:1}))+[112,124,138].map(y=>L(20,y,70,y,'g')).join('')],
+['CP',A,'Foreground frame','Leaves, grass or a railing close to the lens.',()=>gr(126)+fig('stand',45,126,.6,{face:1})+grass()],
+['CP',A,'Depth layers','Foreground, subject, background. Three planes.',()=>mtn(70,.7)+tree(72,114,34)+gr(126)+fig('stand',40,126,.55)+rock(-6,160,62)],
+['CP',A,'Lead room','Leave space where the subject moves or looks.',()=>gr(140)+fig('walk',22,140,.75,{prof:1})+ar(40,96,82,96)],
+['CP',A,'Tight crop','Cut the top of the head, never the chin.',()=>fig('stand',45,445,4.6,{face:1})],
+['CP','d','Shadow play','Film the shadow on a wall, not the dancer.',()=>gr(124)+fig('lean',58,124,.95,{c:'b'})+L(0,124,90,124,'b')+fig('lean',18,156,.28)],
+['CP',A,'Split frame','Two halves: two places, people, or times.',()=>L(45,0,45,160,'b dash')+mtn(80,.5)+gr(140)+fig('stand',22,140,.55)+spot(68,140,10)+fig('mic',68,140,.55)]
+,
+// SUBJECTS
+['SB',A,'Two-shot','Two people in one frame. Duet, chat, friendship.',()=>gr(92)+fig('stand',26,212,1.75,{face:1})+fig('stand',66,214,1.72,{face:1,pony:1})],
+['SB',A,'Group','Everyone in frame. Crew, class, team.',()=>gr(140)+[[15,'hips'],[30,'cheer'],[45,'v'],[60,'point'],[75,'stand']].map(([x,p],i)=>fig(p,x,i===2?148:140,.46)).join('')],
+['SB',A,'Over the shoulder','From behind one person onto the other.',()=>gr(90)+fig('stand',60,200,1.3,{face:1,pony:1})+fig('stand',16,330,3,{back:1})],
+['SB',A,'POV','What the subject sees. Hands in frame sell it.',()=>gr(80)+trail(80)+L(6,160,30,116,'k')+L(84,160,60,116,'k')+R(30,84,30,44,'k hd',3)+R(33,88,24,34,'b')],
+['SB',A,'Reaction','Cut to a face reacting. Surprise, awe, a laugh.',()=>fig('stand',45,456,4.5)+L(14,20,22,30,'m')+L(8,40,18,44,'m')+L(76,20,68,30,'m')+L(82,40,72,44,'m')],
+['SB','es','Crowd','Heads fill the frame. Scale and buzz.',()=>crowd(20,5,6,11)+crowd(44,6,5,12)+crowd(72,7,5,13)+crowd(104,8,4,14)+crowd(138,10,3,15)],
+['SB','des','Audience from stage','From behind the performer onto the crowd.',()=>crowd(58,4,7,5,1)+crowd(78,5,6,6,1)+stage(104)+fig('v',26,232,1.5,{back:1})],
+['SB','des','Stage from audience','Backs of heads, stage beyond. You are there.',()=>spot(30,80,12)+spot(62,80,12)+stage(84)+fig('mic',45,84,.48)+crowd(118,7,4,7)+crowd(142,10,3,8)],
+['SB','d','Mirrored partners','Two dancers mirror each other across the center.',()=>gr(140)+fig('kick',24,140,.55)+fig('kick',66,140,.55,{flip:1})],
+['SB',A,'Selfie / vlog','Arm toward the lens. Check-ins and talking.',()=>mtn(90,.8)+fig('selfie',38,282,2.4,{face:1})],
+['SB',A,'Walk and talk','Two side by side, camera walking backward.',()=>trail(70)+fig('walk',30,150,.9,{face:1})+fig('walk',62,150,.88,{face:1,pony:1})],
+['SB','es','Hero in the crowd','One person clear, everyone else is texture.',()=>crowd(62,5,6,9)+fig('cheer',45,240,1.6,{face:1})+crowd(140,8,4,10)]
+,
+// MOVEMENT
+['MV',A,'Pan','Camera turns left or right on the spot.',()=>mtn(96,1)+gr(120)+fig('stand',45,120,.3)+ar(12,60,80,60)],
+['MV',A,'Tilt up','Tip up from feet to face. A reveal.',()=>gr(150)+fig('stand',42,150,1.1,{face:1})+ar(80,146,80,18)],
+['MV',A,'Tilt down','Sky or peak down to the subject. An arrival.',()=>mtn(70,1.2)+gr(132)+fig('stand',42,132,.6)+ar(80,14,80,146)],
+['MV',A,'Push in','Move closer. Builds focus and emotion.',()=>gr(150)+fig('stand',45,150,1.1,{face:1})+zin()],
+['MV',A,'Pull out','Move away. Reveals the place, ends a scene.',()=>mtn(96,.8)+gr(120)+fig('stand',45,120,.4)+zout()],
+['MV',A,'Tracking side','Camera moves alongside at the same speed.',()=>gr(128)+tree(10,128,34)+tree(76,128,28)+fig('walk',45,128,.8,{prof:1})+ar(18,144,72,144)],
+['MV','h','Follow from behind','Behind the subject, moving with them.',()=>trail(60)+fig('walk',45,140,.8,{back:1,pack:1})+ar(72,152,54,96)],
+['MV',A,'Lead','Camera walks backward in front of the subject.',()=>trail(60)+fig('walk',45,150,.9,{face:1})+ar(80,110,80,154)],
+['MV',A,'Orbit','Circle around the subject. 360 energy.',()=>gr(140)+`<ellipse class="m dash" cx="45" cy="112" rx="38" ry="10"/>`+fig('stand',45,140,.9,{face:1})+arc('M12 116 Q45 132 78 116')],
+['MV',A,'Crane up','Camera rises and the view opens up.',()=>mtn(80,1.1)+gr(124)+fig('stand',45,124,.35)+ar(10,150,10,40)],
+['MV',A,'Whip pan','Very fast pan that blurs. Energy or a cut.',()=>speed([30,48,66,84,102,120,138])+ar(10,80,82,80)],
+['MV',A,'Handheld','Slight shake. Raw and in the moment.',()=>gr(150)+fig('stand',45,150,1,{face:1})+shake(6,12)+shake(70,12)+shake(6,152)+shake(70,152)],
+['MV','des','Crash zoom','Snap zoom onto a face. Comedy or punch.',()=>fig('stand',45,456,4.5,{})+ar(4,6,20,22)+ar(86,6,70,22)+ar(4,154,20,138)+ar(86,154,70,138)],
+['MV',A,'Rack focus','Focus jumps from foreground to subject.',()=>gr(120)+fig('stand',64,120,.5,{c:'b',dash:1})+L(22,160,24,104,'k')+flower(24,96,5)+arc('M34 90 Q46 72 58 70',1)],
+['MV','h','Rise over','Climb over a ridge or wall to show what is behind.',()=>mtn(80,.9)+P('M-2 160 L-2 118 Q45 96 92 122 L92 160','b hd')+fig('stand',60,80,.18)+arc('M16 150 Q20 90 64 58')],
+['MV',A,'Reveal','Slide out from behind a wall, tree or person.',()=>gr(130)+fig('stand',64,130,.7,{face:1})+R(-4,0,40,160,'b hd')+ar(22,80,56,80)],
+['MV','dh','Low follow','Gimbal near the floor, following the steps.',()=>gr(152)+fig('walk',45,152,3.4,{shoes:1})+ar(80,120,24,120)],
+['MV','des','Roll','Camera turns on its axis. Dreamy or a transition.',()=>G('rotate(20 45 90)',gr(130)+fig('stand',45,130,.8))+arc('M45 26 A52 52 0 1 1 18 36')],
+['MV',A,'Dolly zoom','Move in while zooming out. Background warps.',()=>floorLines(80)+fig('stand',45,140,.9,{face:1})+ar(30,40,8,14)+ar(60,40,82,14)+ar(45,100,45,84)]
+,
+// DANCE
+['DA','d','Formation wide','The whole group. Spacing and lines.',()=>floorLines(60)+gr(60)+[20,45,70].map(x=>fig('v',x,108,.4)).join('')+[32,58].map(x=>fig('v',x,140,.52)).join('')],
+['DA','d','Footwork','Feet only. Steps, slides and stomps.',()=>gr(154)+fig('walk',45,152,3.6,{shoes:1})+arc('M68 118 Q80 108 88 120')+arc('M28 134 Q16 128 8 138')],
+['DA','d','Arm lines','Upper body. Clean lines and hand shapes.',()=>gr(120)+fig('out',45,196,1.3,{face:1})+arc('M8 72 Q18 46 38 38')+arc('M82 72 Q72 46 52 38')],
+['DA','d','Spin','Hold wide on a turn, or orbit with it.',()=>gr(146)+`<ellipse class="m dash" cx="45" cy="98" rx="30" ry="7"/>`+fig('passe',45,146,1.1,{face:1})+arc('M18 102 Q45 112 72 102')],
+['DA','d','Jump freeze','Catch the top of the jump.',()=>gr(146)+El(45,146,16,3,'b')+fig('jump',45,112,1,{face:1})+ar(20,140,20,108)],
+['DA','d','Low kick','Camera near the floor, dancer towers.',()=>L(0,0,24,160)+L(90,0,66,160)+fig('kick',40,162,1.45,{face:1})],
+['DA','d','Top-down circle','From above the group becomes a shape.',()=>Ci(45,80,34,'g')+[0,1,2,3,4,5].map(i=>{const a=i*Math.PI/3;return top(45+Math.cos(a)*28,80+Math.sin(a)*28,.72,'out')}).join('')+top(45,80,.72,'up')],
+['DA','d','Studio mirror','Dancer and reflection, two angles at once.',()=>R(8,12,74,98,'b')+L(0,104,90,104)+fig('lean',50,100,.58,{c:'b',flip:1})+fig('lean',36,196,1.15,{back:1})],
+['DA','des','Backlit','Light behind the dancer. Pure shape.',()=>P('M40 0 L6 146 L84 146 L50 0','b dash')+El(45,146,40,5,'b')+fig('finale',45,142,.9,{sil:1})],
+['DA','d','Hair flip','Close on the head for flips and head snaps.',()=>fig('stand',45,456,4.5,{face:1,pony:1})+arc('M70 26 Q88 40 86 70')+arc('M14 30 Q2 46 6 70')],
+['DA','d','Entrance','Empty frame, then the dancer steps in.',()=>gr(140)+fig('walk',6,140,.8,{prof:1})+ar(28,96,68,96)],
+['DA','d','Final pose','Hold the last pose. Thumbnail and ending.',()=>spot(45,150,22)+gr(150)+fig('finale',45,152,1.15,{face:1})],
+['DA','d','Partner lift','Frame wide enough for both bodies.',()=>gr(148)+fig('up',45,148,.8)+G('rotate(-80 45 58)',fig('out',45,86,.52))],
+['DA','d','Beat cuts','Same move, three sizes. Cut on each beat.',()=>L(0,53,90,53,'k')+L(0,107,90,107,'k')+fig('up',45,50,.42)+fig('kick',40,104,.42)+fig('finale',45,157,.42)],
+['DA','d','Hands','Snaps, waves, hand shapes. Punctuation.',()=>hand(45,98,4,-18)+arc('M16 42 Q10 60 18 80')+arc('M74 36 Q82 52 76 70')],
+['DA','d','Wave / canon','Line of dancers, move ripples down the line.',()=>gr(140)+['stand','hold','out','cheer','up'].map((p,i)=>fig(p,12+i*16.5,140,.5)).join('')+ar(8,64,82,50)]
+,
+// HIKING
+['HK','h','Trailhead','Sign, start of the path. The day begins.',()=>mtn(80,1.1)+trail(94,52)+sign(20,132)+fig('walk',52,118,.3,{pack:1,back:1})],
+['HK','h','Summit hero','Arms up on top. The payoff shot.',()=>cloud(8,30)+cloud(62,20)+P('M-2 160 L45 112 L92 160','b hd')+fig('v',45,113,.8,{face:1})],
+['HK','h','Boots on trail','Boots, dust and rocks. Trail texture.',()=>gr(154)+rock(-4,160,24)+rock(66,160,30)+fig('walk',45,152,3.6,{shoes:1})],
+['HK','h','Pack from behind','Back to camera, pack on, view ahead.',()=>mtn(100,1)+fig('stand',45,282,2.6,{back:1,pack:1})],
+['HK','h','Pass-by','Static camera, hiker crosses the frame.',()=>mtn(90,.7)+gr(120)+trees(120,24,[10,80])+fig('walk',45,120,.45,{pack:1,pole:1,prof:1})+ar(14,74,78,74)],
+['HK','h','POV with poles','Your view: poles, boots or hands in frame.',()=>mtn(76,.7)+trail(76)+L(6,160,30,96,'k')+L(84,160,60,96,'k')+Ci(10,150,7,'k hd')+Ci(80,150,7,'k hd')],
+['HK','h','Taking in the view','Back to camera. We look with them.',()=>waves(110,5,9)+P('M-2 104 Q45 94 92 104')+rock(8,160,74)+fig('hips',45,138,.62,{back:1,pack:1})],
+['HK','h','Map and compass','Hands on map, phone or compass.',()=>R(14,52,62,72,'k hd',2)+P('M22 64 Q40 80 34 100 Q30 110 44 118','b')+P('M50 60 L58 74 L68 70','b')+Ci(62,112,11,'k hd')+P('M62 104 L64 112 L62 120 L60 112 Z','kf')+hand(12,94,2.2,70)+hand(78,94,2.2,-70,'k',true)],
+['HK','h','Stream crossing','Stepping stones, moving water, balance.',()=>waves(84,9,9)+El(18,140,10,4,'b hd')+El(46,116,11,4,'b hd')+El(70,96,9,3,'b hd')+fig('walk',46,114,.6,{pole:1})],
+['HK','h','Sunrise silhouette','Sun on the horizon behind the hiker.',()=>P('M5 112 A40 40 0 0 1 85 112')+gr(112)+fig('stand',45,112,.9,{sil:1,pack:1})],
+['HK','h','Scale shot','Tiny person, huge mountain.',()=>P('M-2 160 L-2 120 L22 40 L40 70 L58 8 L92 110 L92 160','b hd')+P('M22 40 L28 60 M58 8 L62 36','b')+fig('stand',40,70,.08)],
+['HK','h','Rest break','Sitting, drinking, snacks. A breather.',()=>mtn(76,.6)+rock(8,160,56)+fig('sit',30,160,1,{face:1,bottle:1})],
+['HK','h','Gear flat lay','Top-down on your kit before you leave.',()=>R(20,18,50,58,'k hd',8)+R(30,28,30,14,'k',3)+El(26,108,9,15,'k hd')+El(48,110,9,15,'k hd')+R(66,92,10,30,'k hd',3)+R(12,130,30,22,'k hd',1)+Ci(58,142,6,'k')+Ci(74,142,6,'k')+L(64,142,68,142,'k')],
+['HK','h','Trail marker','Red-white-red CAI mark on a rock. Local detail.',()=>rock(-10,150,110)+R(26,70,38,10,'mf')+R(26,80,38,10,'k hd')+R(26,90,38,10,'mf')+R(26,70,38,30,'k')],
+['HK','h','Coastal path','Cliff path above the sea, coast in frame.',()=>mtn(60,.8)+waves(96,7,9)+P('M-2 150 Q30 118 62 112 L92 104','b')+[10,24,38,52,66,80].map((x,i)=>L(x,146-i*7,x,136-i*7)).join('')+fig('walk',52,120,.34,{pack:1})],
+['HK','h','Ridge follow','Above and behind along a ridge line.',()=>P('M-2 150 L20 110 L36 118 L56 70 L72 78 L92 30')+P('M-2 160 L20 130 L40 140 L60 96 L92 70','b')+fig('walk',46,92,.12)+ar(30,130,66,64)]
+,
+// EVENTS
+['EV','es','Venue','Outside the venue. Lights on, people arriving.',()=>R(8,34,74,110,'b hd')+P('M34 144 L34 110 Q45 98 56 110 L56 144')+[16,64].map(x=>R(x,52,10,16,'b')).join('')+bulbs(26)+crowd(140,3,9,16)],
+['EV','des','Stage wide','Whole stage, lights and crowd edge.',()=>spot(22,96,12)+spot(45,96,12)+spot(68,96,12)+stage(96)+fig('mic',45,96,.42)+fig('stand',22,96,.36)+fig('stand',68,96,.36)+crowd(134,6,5,17)],
+['EV','es','Hands up','Arms up at the drop. Pure energy.',()=>crowd(40,5,6,18,1)+crowd(72,6,5,19,1)+crowd(108,7,5,20,1)+crowd(144,9,4,21,1)],
+['EV','des','Performer from below','From the stage lip. Rock-star feel.',()=>spot(20,160,14)+spot(70,160,14)+fig('mic',45,168,1.4,{face:1})],
+['EV','es','Front row','Right at the barrier, hands in frame.',()=>stage(112)+fig('mic',45,112,.7,{face:1})+crowd(142,12,3,22)+L(76,160,82,100,'k')+Ci(82,96,5,'k hd')],
+['EV','es','Lights close-up','Out-of-focus lights. B-roll and cuts.',()=>[[20,30,12],[62,24,9],[40,64,16],[76,70,10],[14,98,8],[56,108,14],[28,138,11],[74,140,8]].map(([x,y,r])=>Ci(x,y,r)).join('')+bulbs(12)],
+['EV','es','Glasses clink','Glasses meeting up close. Cheers.',()=>wglass(34,104,2.4,18)+wglass(56,104,2.4,-18)+L(45,42,45,30,'m')+L(34,46,28,36,'m')+L(56,46,62,36,'m')],
+['EV','es','Toast','People raising glasses together.',()=>gr(92)+fig('toast',18,200,1.3,{face:1,glass:1})+fig('toast',45,196,1.3,{face:1,glass:1,pony:1})+fig('toast',74,202,1.3,{face:1,glass:1,flip:1})],
+['EV','es','Laughing close-up','Real laughter up close. Gold in the edit.',()=>fig('stand',45,456,4.5)+shake(4,30)+shake(72,30)+shake(4,50)+shake(72,50)],
+['EV','des','Backstage','Waiting, nerves, prep behind the curtain.',()=>P('M0 0 Q8 40 2 80 Q10 120 4 160 M14 0 Q20 40 14 80 Q22 120 16 160')+spot(70,110,14)+stage(110)+fig('stand',48,200,1.5,{back:1})],
+['EV','es','Arrival','Walking in the door. The story starts.',()=>R(16,34,58,126,'b')+R(22,14,46,14,'b hd',1)+L(28,21,62,21)+gr(132)+fig('walk',45,132,.8,{face:1})],
+['EV','es','Sign or banner','Event name, poster, menu board. Sets context.',()=>L(0,6,16,40)+L(90,6,74,40)+R(10,40,70,34,'k hd',1)+[50,58,66].map((y,i)=>L(18,y,72-i*12,y,'k')).join('')+crowd(130,6,5,23)],
+['EV','es','Fireworks','Sky over the town, heads for scale.',()=>fw(28,34,16)+fw(66,24,12)+fw(56,62,10)+houses(118)+crowd(148,8,4,24)],
+['EV','des','Dance floor','Find one person to follow in the mix.',()=>['lean','cheer','v','kick','passe'].map((p,i)=>fig(p,10+i*18,112+(i%2)*8,.42,{c:'b'})).join('')+fig('finale',45,160,.62)+bulbs(14)],
+['EV','es','Candid two-shot','Two people talking, not posing.',()=>fig('stand',30,330,3,{face:1})+fig('stand',72,350,2.9,{prof:1,flip:1})],
+['EV','es','DJ hands','Hands on decks, mixer or instrument.',()=>L(0,6,30,60,'b dash')+L(90,6,60,60,'b dash')+R(-2,96,94,70,'b hd')+Ci(24,110,14,'k hd')+Ci(24,110,3,'k')+Ci(66,110,14,'k hd')+Ci(66,110,3,'k')+hand(30,112,2,20)+hand(62,118,2,-30,'k',true)]
+,
+// TRANSITIONS
+['TR',A,'Match cut','Same pose in two places. Cut between them.',()=>mtn(76,.6)+gr(76)+fig('v',45,76,.4)+L(0,80,90,80,'k')+spot(45,152,14)+stage(150)+fig('v',45,150,.4)+L(76,74,84,74,'m')+L(76,86,84,86,'m')],
+['TR',A,'Whip in, whip out','Whip out of one shot and into the next.',()=>L(0,80,90,80,'k')+speed([20,34,48,62],4,86)+ar(10,40,82,40)+speed([98,112,126,140],4,86)+ar(10,120,82,120)],
+['TR',A,'Cover the lens','A hand covers the lens. The cut hides inside.',()=>hand(45,108,6.2,0)],
+['TR',A,'Object wipe','Something passes close to the lens.',()=>gr(130)+fig('stand',60,130,.7)+R(10,-4,26,168,'b hd',6)+ar(40,70,84,70)],
+['TR',A,'Jump cut','Same frame, subject jumps position.',()=>gr(140)+fig('stand',18,140,.6,{c:'b',dash:1})+fig('lean',72,140,.6,{c:'b',dash:1})+fig('v',45,140,.6)],
+['TR',A,'Speed ramp','Fast then slow, landing on the key move.',()=>gr(140)+[8,20,30,37].map(x=>fig('walk',x,140,.6,{c:'b',dash:1})).join('')+fig('walk',48,140,.6)+ar(10,70,72,70)],
+['TR',A,'Cutaway','Environment detail to cover a cut or breathe.',()=>L(40,160,44,80,'k')+flower(44,68,8)+P('M44 118 q-14 -8 -18 -20 q14 0 18 20','k hd')+waves(140,2,10)],
+['TR',A,'Tilt to sky','Tilt up to sky, cut, tilt down somewhere new.',()=>cloud(14,40)+cloud(52,62)+cloud(30,92)+mtn(160,.7)+ar(76,150,76,24)+ar(14,110,14,150)]
+
+,
+// SWING AND LIVE BAND
+['SW','s','Band wide','The whole band on stage, dancers at the edge.',()=>bulbs(10)+spot(30,118,14)+spot(64,118,14)+stage(118)+fig('bassist',8,118,.4,{bass:1})+fig('sing',36,118,.4,{mic:1})+fig('horn',56,118,.4,{horn:1,hat:1})+drums(80,118,.5)+crowd(146,6,5,31)],
+['SW','s','Singer at the mic','Vintage mic, spotlight, a little lean in.',()=>spot(52,160,24)+gr(92)+fig('sing',36,212,1.5,{mic:1})],
+['SW','s','Trumpet solo','From below, the bell pointing out of the frame.',()=>spot(48,160,22)+fig('horn',30,168,1.35,{horn:1,hat:1})],
+['SW','s','Sax solo','Player in profile, body moving with the line.',()=>spot(48,150,20)+gr(150)+fig('saxp',36,150,1.1,{sax:1})+arc('M70 30 Q82 44 76 62')],
+['SW','s','Double bass slap','Player and bass together, hands on the strings.',()=>gr(150)+fig('bassist',28,150,1.05,{bass:1})+arc('M62 96 Q74 104 66 118')+arc('M64 66 Q74 60 80 70')],
+['SW','s','Drums','Kit in front, drummer behind. Hits on the beat.',()=>gr(150)+fig('drum',45,132,.95,{sticks:1})+drums(45,150,1.4)+L(14,40,20,48,'m')+L(76,40,70,48,'m')],
+['SW','s','Swing-out','The signature move. Wide, low and on the side.',()=>gr(140)+fig('reach',26,140,.72,{hat:1})+fig('reach',66,140,.72,{flip:1,skirt:1,pony:1})+L(45.4,92.5,46.6,92.5,'k thk')+arc('M18 58 Q45 36 72 58')],
+['SW','s','Dip','The ending. Hold still and shoot it low.',()=>gr(140)+G('rotate(-62 72 140)',fig('out',72,140,.66,{skirt:1,pony:1}))+fig('dipL',52,140,.8,{hat:1})],
+['SW','s','Aerial','Frame wide with headroom, the follow flies over.',()=>gr(146)+fig('crouch',45,146,.95,{hat:1})+G('rotate(150 45 90)',fig('v',45,90,.6,{skirt:1}))+arc('M14 110 Q10 40 60 20')],
+['SW','s','Charleston side by side','Two dancers, same kicks, facing camera.',()=>gr(140)+fig('charl',26,140,.6,{hat:1})+fig('charl',64,140,.6,{skirt:1,pony:1})+arc('M40 128 Q46 118 42 108')+arc('M78 128 Q84 118 80 108')],
+['SW','s','Jam circle','Everyone around, one couple in the middle.',()=>[0,1,2,3,4,5,6,7,8,9].map(i=>{const a=i*Math.PI/5;return top(45+Math.cos(a)*36,80+Math.sin(a)*52,.55,'fwd','b')}).join('')+top(36,80,.72,'out')+top(56,80,.72,'out')+`<ellipse class="m dash" cx="46" cy="80" rx="18" ry="22"/>`],
+['SW','s','Dancers with the band','Couple in front, band behind. Both in one frame.',()=>stage(78)+fig('horn',16,78,.3,{c:'b',horn:1})+fig('bassist',38,78,.3,{c:'b',bass:1})+fig('sing',62,78,.3,{c:'b',mic:1})+gr(154)+fig('reach',24,156,.72,{hat:1})+fig('reach',66,156,.72,{flip:1,skirt:'flare',pony:1})+L(43.4,108.5,46.6,108.5,'k thk')],
+['SW','s','Two-tone shoes','Heel-toe, kicks, slides. Swing in close-up.',()=>gr(150)+shoe(28,150,1.3)+shoe(64,150,1.3,true)+shoe(30,120,1.1)+shoe(62,124,1.1,true)+arc('M18 108 Q30 96 42 106')+arc('M78 106 Q66 94 56 104')],
+['SW','s','Hat tip','Era details: hat, braces, pearls.',()=>gr(96)+fig('tip',45,282,2.6,{hat:1})],
+['SW','s','Clapping on the beat','Crowd clapping, one person clear.',()=>crowd(60,5,6,32)+fig('clap',45,240,1.6)+L(38,112,32,104,'m')+L(52,112,58,104,'m')+L(45,106,45,98,'m')+crowd(144,8,4,33)],
+['SW','s','Underarm turn','Lead hand up, follow spins under it.',()=>gr(140)+fig('cheer',30,140,.72,{hat:1})+`<ellipse class="m dash" cx="57" cy="104" rx="20" ry="5"/>`+fig('passe',57,140,.7,{skirt:'flare',pony:1})+L(39.4,64.4,57.4,68,'k thk')+arc('M38 108 Q57 116 76 106')],
+['SW','s','Over the bell','Past the horn player onto the dancers.',()=>gr(150)+fig('reach',50,150,.34)+fig('reach',74,150,.34,{flip:1,skirt:1})+fig('horn',2,300,2.2,{horn:1,hat:1})],
+['SW','s','Piano hands','Hands on the keys. Rhythm you can see.',()=>keys(24)+hand(28,112,2.4,10)+hand(64,118,2.4,-10,'k',true)]
+];
+
+const book=document.getElementById('book');
+const CTX=[['all','All'],['d','Dance'],['s','Swing'],['h','Hiking'],['e','Events']];
+let ctx='all',cat='ALL';
+let picked=new Set();
+try{picked=new Set(JSON.parse(localStorage.getItem('shotbook-list')||'[]'))}catch(e){}
+const save=()=>{try{localStorage.setItem('shotbook-list',JSON.stringify([...picked]))}catch(e){}};
+
+const counters={};
+const shots=S.map(([c,x,n,t,d])=>{counters[c]=(counters[c]||0)+1;return {c,x,n,t,d,id:c+'-'+String(counters[c]).padStart(2,'0')};});
+const ctxLabel=x=>x==='dhes'?'any':x.split('').map(k=>({d:'dance',h:'hiking',e:'events',s:'swing'})[k]).join(' · ');
+const svgCache={};
+const frame=s=>svgCache[s.id]||(svgCache[s.id]=`<svg class="fr" viewBox="0 0 90 160" role="img" aria-label="${s.n} storyboard frame"><rect class="bgr" x="0" y="0" width="90" height="160"/>${s.d()}<rect class="bdr" x="1" y="1" width="88" height="158"/></svg>`);
+
+const ctxRow=document.getElementById('ctxRow'),catRow=document.getElementById('catRow');
+function chip(row,label,val,group){const b=document.createElement('button');b.type='button';b.className='chip';b.textContent=label;b.dataset.v=val;b.dataset.g=group;row.appendChild(b);return b;}
+CTX.forEach(([v,l])=>chip(ctxRow,l,v,'ctx'));
+chip(catRow,'All','ALL','cat');CATS.forEach(([k,n])=>chip(catRow,n,k,'cat'));
+function syncChips(){document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.g==='ctx'?b.dataset.v===ctx:b.dataset.v===cat)));}
+document.querySelector('.bar').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;if(b.dataset.g==='ctx')ctx=b.dataset.v;else cat=b.dataset.v;syncChips();render();});
+
+function render(){
+  let html='';
+  for(const [k,name,blurb] of CATS){
+    if(cat!=='ALL'&&cat!==k)continue;
+    const list=shots.filter(s=>s.c===k&&(ctx==='all'||s.x.includes(ctx)));
+    if(!list.length)continue;
+    html+=`<section id="${k}"><div class="sh"><h2>${name}</h2><span class="n">${k} · ${list.length} shots</span><p>${blurb}</p></div><div class="grid">`+
+      list.map(s=>`<article class="card${picked.has(s.id)?' on':''}" data-id="${s.id}">${frame(s)}<div class="meta"><span class="code">${s.id}</span><button type="button" class="add" aria-pressed="${picked.has(s.id)}" aria-label="Add ${s.n} to my list">${picked.has(s.id)?'Added':'+ List'}</button></div><h3>${s.n}</h3><p>${s.t}</p><span class="ctx">${ctxLabel(s.x)}</span></article>`).join('')+`</div></section>`;
+  }
+  book.innerHTML=html||'<p class="empty">No shots match these filters.</p>';
+  updateCount();
+}
+function updateCount(){document.getElementById('count').textContent=picked.size+(picked.size===1?' shot':' shots');}
+book.addEventListener('click',e=>{const b=e.target.closest('.add');if(!b)return;const card=b.closest('.card'),id=card.dataset.id;
+  if(picked.has(id))picked.delete(id);else picked.add(id);
+  const on=picked.has(id);card.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));b.textContent=on?'Added':'+ List';save();updateCount();});
+const out=document.getElementById('out');
+function listText(){return shots.filter(s=>picked.has(s.id)).map(s=>`${s.id}  ${s.n} - ${s.t}`).join('\n');}
+document.getElementById('copy').addEventListener('click',e=>{
+  const btn=e.currentTarget;const txt=listText();
+  if(!txt){btn.textContent='List is empty';setTimeout(()=>btn.textContent='Copy list',1400);return;}
+  const fallback=()=>{out.hidden=false;out.value=txt;out.focus();out.select();btn.textContent='Select and copy';};
+  try{navigator.clipboard.writeText(txt).then(()=>{out.hidden=true;btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy list',1400);},fallback);}catch(err){fallback();}
+});
+document.getElementById('clear').addEventListener('click',()=>{picked.clear();save();out.hidden=true;render();});
+syncChips();render();
+})();
+</script>

@@ -1,0 +1,9 @@
+Masonry - DaVinci Resolve Edit effect (Fusion macro). Version 2026-09-26.
+Pinterest / Instagram style masonry grid: each clip on its own track gets
+Masonry with the same Layout and a different Cell; together they fill a
+vertical frame with boxes of different heights, even gaps, rounded corners.
+5 layouts (Banner 6, Columns 5, Staggered 6, Scroll 12, Offset 4), each also
+as a one-click effect with a thumbnail. Frame Preset (9:16, 4:5, 1:1, 4K,
+16:9) or Custom. Builds its own canvas, so 4K 16:9 sources work on a 9:16
+timeline; resizes once to the shown size. Scroll Offset / Speed for feeds.
+Look at: README.md, src/Giniroisenkou_Masonry_gen.py (LAYOUTS table).

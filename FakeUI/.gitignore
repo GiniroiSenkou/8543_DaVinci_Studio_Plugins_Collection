@@ -1,0 +1,8 @@
+# build output and test material - never commit
+build/
+_test/
+_exp_*
+__pycache__/
+*.pyc
+*.mov
+*.mp4
